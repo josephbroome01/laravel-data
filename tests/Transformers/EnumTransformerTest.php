@@ -1,6 +1,5 @@
 <?php
 
-use ReflectionProperty;
 use Spatie\LaravelData\Support\DataProperty;
 use Spatie\LaravelData\Tests\Fakes\DummyBackedEnum;
 use Spatie\LaravelData\Tests\TestCase;

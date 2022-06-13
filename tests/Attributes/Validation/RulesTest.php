@@ -1,7 +1,6 @@
 <?php
 
 use Carbon\Carbon;
-use Generator;
 use Illuminate\Contracts\Validation\Rule as RuleContract;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Validation\Rules\Enum as EnumRule;

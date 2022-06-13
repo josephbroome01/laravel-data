@@ -1,8 +1,6 @@
 <?php
 
 use Carbon\CarbonImmutable;
-use DateTime;
-use DateTimeImmutable;
 use Spatie\LaravelData\Lazy;
 use Spatie\LaravelData\Resolvers\DataFromArrayResolver;
 use Spatie\LaravelData\Tests\Fakes\BuiltInTypeWithCastData;

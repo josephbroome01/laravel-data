@@ -1,6 +1,5 @@
 <?php
 
-use Generator;
 use Spatie\LaravelData\Support\PartialsParser;
 use Spatie\LaravelData\Tests\TestCase;
 

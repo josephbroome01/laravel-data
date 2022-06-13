@@ -1,6 +1,5 @@
 <?php
 
-use ReflectionClass;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Support\DataClass;
 use Spatie\LaravelData\Tests\DataWithDefaults;
