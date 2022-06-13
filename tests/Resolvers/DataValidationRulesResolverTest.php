@@ -9,7 +9,6 @@ use Spatie\LaravelData\Tests\Fakes\SimpleData;
 use Spatie\LaravelData\Tests\Fakes\SimpleDataWithOverwrittenRules;
 use Spatie\LaravelData\Tests\TestCase;
 
-uses(TestCase::class);
 
 beforeEach(function () {
     $this->resolver = app(DataValidationRulesResolver::class);

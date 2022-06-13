@@ -18,7 +18,6 @@ use Spatie\LaravelData\Tests\Fakes\SimpleData;
 use Spatie\LaravelData\Tests\TestCase;
 use Spatie\LaravelData\Transformers\DateTimeInterfaceTransformer;
 
-uses(TestCase::class);
 
 it('works with non typed properties', function () {
     $helper = resolveHelper(new class () {

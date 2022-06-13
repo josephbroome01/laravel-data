@@ -9,7 +9,6 @@ use Spatie\LaravelData\Resolvers\EmptyDataResolver;
 use Spatie\LaravelData\Tests\Fakes\SimpleData;
 use Spatie\LaravelData\Tests\TestCase;
 
-uses(TestCase::class);
 
 it('will return null if the property has no type', function () {
     assertEmptyPropertyValue(null, new class () {

@@ -3,7 +3,6 @@
 use Spatie\LaravelData\Support\PartialsParser;
 use Spatie\LaravelData\Tests\TestCase;
 
-uses(TestCase::class);
 
 /**
  *

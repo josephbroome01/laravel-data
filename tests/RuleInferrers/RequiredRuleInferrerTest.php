@@ -11,7 +11,6 @@ use Spatie\LaravelData\Support\DataProperty;
 use Spatie\LaravelData\Tests\Fakes\SimpleData;
 use Spatie\LaravelData\Tests\TestCase;
 
-uses(TestCase::class);
 
 beforeEach(function () {
     $this->inferrer = new RequiredRuleInferrer();

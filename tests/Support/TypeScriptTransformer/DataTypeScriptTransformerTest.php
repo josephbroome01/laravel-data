@@ -9,7 +9,6 @@ use Spatie\LaravelData\Tests\Fakes\SimpleData;
 use Spatie\LaravelData\Tests\TestCase;
 use Spatie\TypeScriptTransformer\TypeScriptTransformerConfig;
 
-uses(TestCase::class);
 
 it('can covert a data object to typescript', function () {
     $config = TypeScriptTransformerConfig::create();

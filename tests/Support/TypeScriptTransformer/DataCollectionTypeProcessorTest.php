@@ -8,7 +8,6 @@ use Spatie\LaravelData\Tests\Fakes\SimpleData;
 use Spatie\LaravelData\Tests\TestCase;
 use Spatie\TypeScriptTransformer\TypeScriptTransformerConfig;
 
-uses(TestCase::class);
 
 it('uses the correct types for data collection of attributes', function () {
     $config = TypeScriptTransformerConfig::create();

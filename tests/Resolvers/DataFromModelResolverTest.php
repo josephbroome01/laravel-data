@@ -11,7 +11,6 @@ use Spatie\LaravelData\Tests\Fakes\Models\FakeModel;
 use Spatie\LaravelData\Tests\Fakes\Models\FakeNestedModel;
 use Spatie\LaravelData\Tests\TestCase;
 
-uses(TestCase::class);
 
 beforeEach(function () {
     $this->resolver = app(DataFromModelResolver::class);

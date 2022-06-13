@@ -7,7 +7,6 @@ use Spatie\LaravelData\Casts\Uncastable;
 use Spatie\LaravelData\Support\DataProperty;
 use Spatie\LaravelData\Tests\TestCase;
 
-uses(TestCase::class);
 
 it('can cast date times', function () {
     $caster = new DateTimeInterfaceCast('d-m-Y H:i:s');

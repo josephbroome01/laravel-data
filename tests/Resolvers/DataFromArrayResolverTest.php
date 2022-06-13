@@ -16,7 +16,6 @@ use Spatie\LaravelData\Tests\Fakes\NestedModelData;
 use Spatie\LaravelData\Tests\Fakes\SimpleData;
 use Spatie\LaravelData\Tests\TestCase;
 
-uses(TestCase::class);
 
 beforeEach(function () {
     $this->action = app(DataFromArrayResolver::class);

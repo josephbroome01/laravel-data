@@ -7,7 +7,6 @@ use Spatie\LaravelData\Tests\Fakes\DummyBackedEnum;
 use Spatie\LaravelData\Tests\Fakes\DummyUnitEnum;
 use Spatie\LaravelData\Tests\TestCase;
 
-uses(TestCase::class);
 
 beforeEach(function () {
     $this->onlyPHP81();

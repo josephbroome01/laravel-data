@@ -6,7 +6,6 @@ use Spatie\LaravelData\Tests\DataWithDefaults;
 use Spatie\LaravelData\Tests\Fakes\DummyDto;
 use Spatie\LaravelData\Tests\TestCase;
 
-uses(TestCase::class);
 
 it('can find from methods and the types that can be used with them', function () {
     $subject = new class (null) extends Data {

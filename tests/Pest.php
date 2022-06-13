@@ -1,5 +1,7 @@
 <?php
 
+uses(\Spatie\LaravelData\Tests\TestCase::class)->in('Casts', 'Resolvers', 'RuleInferrers', 'Support', 'Transformers');
+
 /*
 |--------------------------------------------------------------------------
 | Test Case

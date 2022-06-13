@@ -12,7 +12,6 @@ use Spatie\LaravelData\Tests\Fakes\DummyModel;
 use Spatie\LaravelData\Tests\Fakes\DummyModelWithCasts;
 use Spatie\LaravelData\Tests\TestCase;
 
-uses(TestCase::class);
 
 it('can create data from a custom method', function () {
     $data = new class ('') extends Data {

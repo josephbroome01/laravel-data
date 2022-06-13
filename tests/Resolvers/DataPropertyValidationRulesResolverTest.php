@@ -13,7 +13,6 @@ use Spatie\LaravelData\Tests\Fakes\NestedData;
 use Spatie\LaravelData\Tests\Fakes\SimpleData;
 use Spatie\LaravelData\Tests\TestCase;
 
-uses(TestCase::class);
 
 it('will add a required or nullable rule based upon the property nullability', function () {
     $rules = resolveRules(new class () {
