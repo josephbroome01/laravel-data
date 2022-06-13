@@ -11,8 +11,6 @@ use Spatie\LaravelData\Support\DataProperty;
 use Spatie\LaravelData\Tests\Fakes\FakeEnum;
 use Spatie\LaravelData\Tests\Fakes\NestedData;
 use Spatie\LaravelData\Tests\Fakes\SimpleData;
-use Spatie\LaravelData\Tests\TestCase;
-
 
 it('will add a required or nullable rule based upon the property nullability', function () {
     $rules = resolveRules(new class () {

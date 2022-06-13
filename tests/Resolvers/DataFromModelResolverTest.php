@@ -9,8 +9,6 @@ use Spatie\LaravelData\Tests\Factories\DataPropertyBlueprintFactory;
 use Spatie\LaravelData\Tests\Fakes\FakeModelData;
 use Spatie\LaravelData\Tests\Fakes\Models\FakeModel;
 use Spatie\LaravelData\Tests\Fakes\Models\FakeNestedModel;
-use Spatie\LaravelData\Tests\TestCase;
-
 
 beforeEach(function () {
     $this->resolver = app(DataFromModelResolver::class);

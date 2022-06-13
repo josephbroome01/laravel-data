@@ -5,9 +5,7 @@ use Spatie\LaravelData\Data;
 use Spatie\LaravelData\DataCollection;
 use Spatie\LaravelData\Support\TypeScriptTransformer\DataTypeScriptTransformer;
 use Spatie\LaravelData\Tests\Fakes\SimpleData;
-use Spatie\LaravelData\Tests\TestCase;
 use Spatie\TypeScriptTransformer\TypeScriptTransformerConfig;
-
 
 it('uses the correct types for data collection of attributes', function () {
     $config = TypeScriptTransformerConfig::create();

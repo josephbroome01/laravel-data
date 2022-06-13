@@ -3,8 +3,6 @@
 use Illuminate\Support\Facades\DB;
 use Spatie\LaravelData\Tests\Fakes\DummyModelWithCasts;
 use Spatie\LaravelData\Tests\Fakes\SimpleData;
-use Spatie\LaravelData\Tests\TestCase;
-
 
 beforeEach(function () {
     DummyModelWithCasts::migrate();

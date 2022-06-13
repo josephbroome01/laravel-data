@@ -5,8 +5,6 @@ use Spatie\LaravelData\Casts\Uncastable;
 use Spatie\LaravelData\Support\DataProperty;
 use Spatie\LaravelData\Tests\Fakes\DummyBackedEnum;
 use Spatie\LaravelData\Tests\Fakes\DummyUnitEnum;
-use Spatie\LaravelData\Tests\TestCase;
-
 
 beforeEach(function () {
     $this->onlyPHP81();

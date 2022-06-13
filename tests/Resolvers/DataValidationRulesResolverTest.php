@@ -7,8 +7,6 @@ use Spatie\LaravelData\DataCollection;
 use Spatie\LaravelData\Resolvers\DataValidationRulesResolver;
 use Spatie\LaravelData\Tests\Fakes\SimpleData;
 use Spatie\LaravelData\Tests\Fakes\SimpleDataWithOverwrittenRules;
-use Spatie\LaravelData\Tests\TestCase;
-
 
 beforeEach(function () {
     $this->resolver = app(DataValidationRulesResolver::class);

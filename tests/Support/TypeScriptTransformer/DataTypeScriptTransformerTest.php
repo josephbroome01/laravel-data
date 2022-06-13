@@ -6,9 +6,7 @@ use Spatie\LaravelData\DataCollection;
 use Spatie\LaravelData\Lazy;
 use Spatie\LaravelData\Support\TypeScriptTransformer\DataTypeScriptTransformer;
 use Spatie\LaravelData\Tests\Fakes\SimpleData;
-use Spatie\LaravelData\Tests\TestCase;
 use Spatie\TypeScriptTransformer\TypeScriptTransformerConfig;
-
 
 it('can covert a data object to typescript', function () {
     $config = TypeScriptTransformerConfig::create();

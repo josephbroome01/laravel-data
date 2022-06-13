@@ -2,9 +2,7 @@
 
 use Spatie\LaravelData\Support\DataProperty;
 use Spatie\LaravelData\Tests\Fakes\DummyBackedEnum;
-use Spatie\LaravelData\Tests\TestCase;
 use Spatie\LaravelData\Transformers\EnumTransformer;
-
 
 it('can transform enums', function () {
     $this->onlyPHP81();
