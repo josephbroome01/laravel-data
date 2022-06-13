@@ -61,7 +61,7 @@ class RulesMapper
         if (! str_contains($rule, '|')) {
             try {
                 return $this->ruleFactory->create($rule);
-            } catch (Throwable $t) {
+            } catch (Throwable) {
                 return new Rule($rule);
             }
         }

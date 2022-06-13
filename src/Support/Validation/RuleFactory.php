@@ -80,6 +80,7 @@ use Spatie\LaravelData\Attributes\Validation\Unique;
 use Spatie\LaravelData\Attributes\Validation\Url;
 use Spatie\LaravelData\Attributes\Validation\Uuid;
 use Spatie\LaravelData\Exceptions\CouldNotCreateValidationRule;
+use Spatie\LaravelData\Attributes\Validation\StringValidationAttribute;
 
 class RuleFactory
 {
@@ -88,7 +89,7 @@ class RuleFactory
         $keyword = Str::before($rule, ':');
         $parameters = $this->resolveParameters($rule);
 
-        /** @var \Spatie\LaravelData\Attributes\Validation\StringValidationAttribute|null $ruleClass */
+        /** @var StringValidationAttribute|null $ruleClass */
         $ruleClass = $this->mapping()[$keyword] ?? null;
 
         if ($ruleClass === null) {

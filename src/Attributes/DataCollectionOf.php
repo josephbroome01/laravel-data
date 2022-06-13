@@ -10,7 +10,7 @@ use Spatie\LaravelData\Exceptions\CannotFindDataClass;
 class DataCollectionOf
 {
     public function __construct(
-        /** @var class-string<\Spatie\LaravelData\Contracts\BaseData> $class */
+        /** @var class-string<BaseData> $class */
         public string $class
     ) {
         if (! is_subclass_of($this->class, BaseData::class)) {

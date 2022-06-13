@@ -28,7 +28,7 @@ interface BaseData
     /**
      * @param \Illuminate\Support\Enumerable|array|\Illuminate\Pagination\AbstractPaginator|\Illuminate\Pagination\AbstractCursorPaginator|\Illuminate\Contracts\Pagination\Paginator|\Spatie\LaravelData\DataCollection $items
      *
-     * @return \Spatie\LaravelData\DataCollection<TValue>|\Spatie\LaravelData\PaginatedDataCollection
+     * @return DataCollection<TValue>|PaginatedDataCollection
      */
     public static function collection(Enumerable|array|AbstractPaginator|AbstractCursorPaginator|Paginator|DataCollection $items): DataCollection|PaginatedDataCollection;
 

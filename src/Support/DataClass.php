@@ -23,9 +23,9 @@ class DataClass
     public function __construct(
         /** @var class-string<DataObject> */
         public readonly string $name,
-        /** @var Collection<string, \Spatie\LaravelData\Support\DataProperty> */
+        /** @var Collection<string, DataProperty> */
         public readonly Collection $properties,
-        /** @var Collection<string, \Spatie\LaravelData\Support\DataMethod> */
+        /** @var Collection<string, DataMethod> */
         public readonly Collection $methods,
         public readonly ?DataMethod $constructorMethod,
         public readonly bool $appendable,

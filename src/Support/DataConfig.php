@@ -4,20 +4,21 @@ namespace Spatie\LaravelData\Support;
 
 use ReflectionClass;
 use Spatie\LaravelData\Casts\Cast;
+use Spatie\LaravelData\RuleInferrers\RuleInferrer;
 use Spatie\LaravelData\Transformers\Transformer;
 
 class DataConfig
 {
-    /** @var array<string, \Spatie\LaravelData\Support\DataClass> */
+    /** @var array<string, DataClass> */
     protected array $dataClasses = [];
 
-    /** @var array<string, \Spatie\LaravelData\Transformers\Transformer> */
+    /** @var array<string, Transformer> */
     protected array $transformers = [];
 
-    /** @var array<string, \Spatie\LaravelData\Casts\Cast> */
+    /** @var array<string, Cast> */
     protected array $casts = [];
 
-    /** @var \Spatie\LaravelData\RuleInferrers\RuleInferrer[] */
+    /** @var RuleInferrer[] */
     protected array $ruleInferrers;
 
     public function __construct(array $config)

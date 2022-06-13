@@ -57,13 +57,13 @@ class DataPipeline
 
     public function execute(): Collection
     {
-        /** @var \Spatie\LaravelData\Normalizers\Normalizer[] $normalizers */
+        /** @var Normalizer[] $normalizers */
         $normalizers = array_map(
             fn (string|Normalizer $normalizer) => is_string($normalizer) ? app($normalizer) : $normalizer,
             $this->normalizers
         );
 
-        /** @var \Spatie\LaravelData\DataPipes\DataPipe[] $pipes */
+        /** @var DataPipe[] $pipes */
         $pipes = array_map(
             fn (string|DataPipe $pipe) => is_string($pipe) ? app($pipe) : $pipe,
             $this->pipes

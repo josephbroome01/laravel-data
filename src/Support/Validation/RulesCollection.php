@@ -3,10 +3,11 @@
 namespace Spatie\LaravelData\Support\Validation;
 
 use Illuminate\Support\Collection;
+use Spatie\LaravelData\Support\Validation\ValidationRule;
 
 class RulesCollection
 {
-    /** @var Collection<\Spatie\LaravelData\Support\Validation\ValidationRule> */
+    /** @var Collection<ValidationRule> */
     protected Collection $rules;
 
     public function __construct()

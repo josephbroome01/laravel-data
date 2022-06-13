@@ -4,6 +4,7 @@ namespace Spatie\LaravelData\Support\TypeScriptTransformer;
 
 use ReflectionClass;
 use ReflectionProperty;
+use Spatie\LaravelData\Support\DataProperty;
 use Spatie\LaravelData\Contracts\BaseData;
 use Spatie\LaravelData\Support\DataConfig;
 use Spatie\LaravelTypeScriptTransformer\Transformers\DtoTransformer;
@@ -58,7 +59,7 @@ class DataTypeScriptTransformer extends DtoTransformer
                     $property->getDeclaringClass()->getName()
                 );
 
-                /** @var \Spatie\LaravelData\Support\DataProperty $dataProperty */
+                /** @var DataProperty $dataProperty */
                 $dataProperty = $dataClass->properties[$property->getName()];
 
                 return $dataProperty->type->isLazy || $dataProperty->type->isOptional

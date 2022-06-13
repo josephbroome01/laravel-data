@@ -8,10 +8,8 @@ class CamelCaseMapper implements NameMapper
 {
     public function map(int|string $name): string|int
     {
-        if (! is_string($name)) {
-            return $name;
-        }
-
-        return Str::camel($name);
+        return  is_string($name)
+            ? Str::camel($name)
+            : $name;
     }
 }

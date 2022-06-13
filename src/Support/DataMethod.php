@@ -32,7 +32,7 @@ class DataMethod
             ),
             $method->isStatic(),
             $method->isPublic(),
-            $isCustomCreationMethod
+            $isCustomCreationMethod,
         );
     }
 
@@ -42,26 +42,27 @@ class DataMethod
             return null;
         }
 
-        $parameters = collect($method->getParameters())->map(function (ReflectionParameter $parameter) use ($properties) {
-            if ($parameter->isPromoted()) {
-                return $properties->get($parameter->name);
-            }
+        $parameters = collect($method->getParameters())
+            ->map(function (ReflectionParameter $parameter) use ($properties) {
+                if ($parameter->isPromoted()) {
+                    return $properties->get($parameter->name);
+                }
 
-            return DataParameter::create($parameter);
-        });
+                return DataParameter::create($parameter);
+            });
 
         return new self(
             '__construct',
             $parameters,
             false,
             $method->isPublic(),
-            false
+            false,
         );
     }
 
     public function accepts(mixed ...$input): bool
     {
-        /** @var Collection<\Spatie\LaravelData\Support\DataParameter|\Spatie\LaravelData\Support\DataProperty> $parameters */
+        /** @var Collection<DataParameter|DataProperty> $parameters */
         $parameters = array_is_list($input)
             ? $this->parameters
             : $this->parameters->mapWithKeys(fn (DataParameter|DataProperty $parameter) => [$parameter->name => $parameter]);

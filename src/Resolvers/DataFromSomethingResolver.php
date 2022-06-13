@@ -47,7 +47,7 @@ class DataFromSomethingResolver
 
     private function createFromCustomCreationMethod(string $class, array $payloads): ?BaseData
     {
-        /** @var Collection<\Spatie\LaravelData\Support\DataMethod> $customCreationMethods */
+        /** @var Collection<DataMethod> $customCreationMethods */
         $customCreationMethods = $this->dataConfig
             ->getDataClass($class)
             ->methods

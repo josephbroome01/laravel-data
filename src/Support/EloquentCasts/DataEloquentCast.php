@@ -10,7 +10,7 @@ use Spatie\LaravelData\Exceptions\CannotCastData;
 class DataEloquentCast implements CastsAttributes
 {
     public function __construct(
-        /** @var class-string<\Spatie\LaravelData\Contracts\BaseData> $dataClass */
+        /** @var class-string<BaseData> $dataClass */
         protected string $dataClass
     ) {
     }

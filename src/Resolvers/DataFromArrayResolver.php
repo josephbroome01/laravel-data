@@ -59,7 +59,7 @@ class DataFromArrayResolver
             throw CannotCreateData::constructorMissingParameters(
                 $dataClass,
                 $parameters,
-                $error
+                $error,
             );
         }
     }
