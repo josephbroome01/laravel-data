@@ -3,7 +3,6 @@
 namespace Spatie\LaravelData\Support\Validation;
 
 use Illuminate\Support\Collection;
-use Spatie\LaravelData\Support\Validation\ValidationRule;
 
 class RulesCollection
 {

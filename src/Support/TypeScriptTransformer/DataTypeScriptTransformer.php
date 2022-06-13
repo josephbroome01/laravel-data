@@ -4,9 +4,9 @@ namespace Spatie\LaravelData\Support\TypeScriptTransformer;
 
 use ReflectionClass;
 use ReflectionProperty;
-use Spatie\LaravelData\Support\DataProperty;
 use Spatie\LaravelData\Contracts\BaseData;
 use Spatie\LaravelData\Support\DataConfig;
+use Spatie\LaravelData\Support\DataProperty;
 use Spatie\LaravelTypeScriptTransformer\Transformers\DtoTransformer;
 use Spatie\TypeScriptTransformer\Structures\MissingSymbolsCollection;
 use Spatie\TypeScriptTransformer\TypeProcessors\DtoCollectionTypeProcessor;
