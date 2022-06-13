@@ -260,7 +260,8 @@ it('can include data based upon relations loaded when they are null', function (
 
 it('can have default included lazy data', function () {
     $data = new class ('Freek') extends Data {
-        public function __construct(public string|Lazy $name) {
+        public function __construct(public string|Lazy $name)
+        {
         }
     };
 
@@ -304,7 +305,8 @@ it('will use transformers to convert specific types', function () {
     $date = new DateTime('16 may 1994');
 
     $data = new class ($date) extends Data {
-        public function __construct(public DateTime $date) {
+        public function __construct(public DateTime $date)
+        {
         }
     };
 
@@ -443,7 +445,8 @@ it('can get the data object without transforming', function () {
 
 it('can append data via method overwrite', function () {
     $data = new class ('Freek') extends Data {
-        public function __construct(public string $name) {
+        public function __construct(public string $name)
+        {
         }
 
         public function with(): array
@@ -460,7 +463,8 @@ it('can append data via method overwrite', function () {
 
 it('can append data via method call', function () {
     $data = new class ('Freek') extends Data {
-        public function __construct(public string $name) {
+        public function __construct(public string $name)
+        {
         }
     };
 
@@ -629,7 +633,8 @@ it('can define the with data trait data class by method', function () {
     $arrayable = new class () implements Arrayable {
         use WithData;
 
-        public function toArray() {
+        public function toArray()
+        {
             return [
                 'string' => 'Hello World',
             ];

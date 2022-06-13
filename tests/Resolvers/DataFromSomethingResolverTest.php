@@ -13,7 +13,8 @@ use Spatie\LaravelData\Tests\Fakes\DummyModelWithCasts;
 
 it('can create data from a custom method', function () {
     $data = new class ('') extends Data {
-        public function __construct(public string $string) {
+        public function __construct(public string $string)
+        {
         }
 
         public static function fromString(string $string): static
@@ -21,11 +22,13 @@ it('can create data from a custom method', function () {
             return new self($string);
         }
 
-        public static function fromDto(DummyDto $dto) {
+        public static function fromDto(DummyDto $dto)
+        {
             return new self($dto->artist);
         }
 
-        public static function fromArray(array $payload) {
+        public static function fromArray(array $payload)
+        {
             return new self($payload['string']);
         }
     };
@@ -38,16 +41,19 @@ it('can create data from a custom method', function () {
 
 it('can create data from a custom method with an interface parameter', function () {
     $data = new class ('') extends Data {
-        public function __construct(public string $string) {
+        public function __construct(public string $string)
+        {
         }
 
-        public static function fromInterface(Arrayable $arrayable) {
+        public static function fromInterface(Arrayable $arrayable)
+        {
             return new self($arrayable->toArray()['string']);
         }
     };
 
     $interfaceable = new class () implements Arrayable {
-        public function toArray() {
+        public function toArray()
+        {
             return [
                 'string' => 'Rick Astley',
             ];
@@ -59,10 +65,12 @@ it('can create data from a custom method with an interface parameter', function 
 
 it('can create data from a custom method with an inherited parameter', function () {
     $data = new class ('') extends Data {
-        public function __construct(public string $string) {
+        public function __construct(public string $string)
+        {
         }
 
-        public static function fromModel(Model $model) {
+        public static function fromModel(Model $model)
+        {
             return new self($model->string);
         }
     };
@@ -74,14 +82,17 @@ it('can create data from a custom method with an inherited parameter', function 
 
 it('can create data from a custom method and always takes the nearest type', function () {
     $data = new class ('') extends Data {
-        public function __construct(public string $string) {
+        public function __construct(public string $string)
+        {
         }
 
-        public static function fromModel(Model $arrayable) {
+        public static function fromModel(Model $arrayable)
+        {
             throw new Exception("Cannot be called");
         }
 
-        public static function fromDummyModel(DummyModel $model) {
+        public static function fromDummyModel(DummyModel $model)
+        {
             return new self($model->string);
         }
     };
@@ -93,7 +104,8 @@ it('can create data from a custom method and always takes the nearest type', fun
 
 it('can create data from a custom optional method', function () {
     $data = new class ('') extends Data {
-        public function __construct(public string $string) {
+        public function __construct(public string $string)
+        {
         }
 
         public static function optionalString(string $string): static
@@ -101,11 +113,13 @@ it('can create data from a custom optional method', function () {
             return new self($string);
         }
 
-        public static function optionalDto(DummyDto $dto) {
+        public static function optionalDto(DummyDto $dto)
+        {
             return new self($dto->artist);
         }
 
-        public static function optionalArray(array $payload) {
+        public static function optionalArray(array $payload)
+        {
             return new self($payload['string']);
         }
     };
@@ -125,7 +139,8 @@ it('can resolve validation dependencies for messages', function () {
 
     $data = new class () extends Data {
         public string $name;
-        public static function rules() {
+        public static function rules()
+        {
             return [
                 'name' => ['required'],
             ];
@@ -149,7 +164,8 @@ it('can resolve validation dependencies for attributes', function () {
 
     $data = new class () extends Data {
         public string $name;
-        public static function rules() {
+        public static function rules()
+        {
             return [
                 'name' => ['required'],
             ];
@@ -171,7 +187,8 @@ it('can resolve payload dependency for rules', function () {
         public string $payment_method;
         public ?string $paypal_email;
 
-        public static function rules(array $payload) {
+        public static function rules(array $payload)
+        {
             return [
                 'payment_method' => ['required'],
                 'paypal_email' => Rule::requiredIf($payload['payment_method'] === 'paypal'),

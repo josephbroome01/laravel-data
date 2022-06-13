@@ -7,7 +7,8 @@ use Spatie\LaravelData\Tests\Fakes\DummyDto;
 
 it('can find from methods and the types that can be used with them', function () {
     $subject = new class (null) extends Data {
-        public function __construct(public $property) {
+        public function __construct(public $property)
+        {
         }
 
         public static function fromString(string $property): static
@@ -26,13 +27,16 @@ it('can find from methods and the types that can be used with them', function ()
         {
         }
 
-        public function fromDoNotIncludeA(string $other) {
+        public function fromDoNotIncludeA(string $other)
+        {
         }
 
-        private static function fromDoNotIncludeB(string $other) {
+        private static function fromDoNotIncludeB(string $other)
+        {
         }
 
-        protected static function fromDoNotIncludeC(string $other) {
+        protected static function fromDoNotIncludeC(string $other)
+        {
         }
 
         public static function fromDoNotIncludeD($other): static
