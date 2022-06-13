@@ -1,7 +1,5 @@
 <?php
 
-namespace Spatie\LaravelData\Tests\Resolvers;
-
 use Illuminate\Http\Request;
 use Spatie\LaravelData\Attributes\WithoutValidation;
 use Spatie\LaravelData\Data;
@@ -11,144 +9,124 @@ use Spatie\LaravelData\Tests\Fakes\SimpleData;
 use Spatie\LaravelData\Tests\Fakes\SimpleDataWithOverwrittenRules;
 use Spatie\LaravelData\Tests\TestCase;
 
-class DataValidationRulesResolverTest extends TestCase
-{
-    private DataValidationRulesResolver $resolver;
+uses(TestCase::class);
 
-    public function setUp(): void
-    {
-        parent::setUp();
+beforeEach(function () {
+    $this->resolver = app(DataValidationRulesResolver::class);
+});
 
-        $this->resolver = app(DataValidationRulesResolver::class);
-    }
+it('will resolve rules for a data object', function () {
+    $data = new class () extends Data {
+        public string $name;
 
-    /** @test */
-    public function it_will_resolve_rules_for_a_data_object()
-    {
-        $data = new class () extends Data {
-            public string $name;
+        public ?int $age;
+    };
 
-            public ?int $age;
-        };
+    $this->assertEquals([
+        'name' => ['string', 'required'],
+        'age' => ['numeric', 'nullable'],
+    ], $this->resolver->execute($data::class)->all());
+});
 
-        $this->assertEquals([
-            'name' => ['string', 'required'],
-            'age' => ['numeric', 'nullable'],
-        ], $this->resolver->execute($data::class)->all());
-    }
+it('will make properties nullable if required', function () {
+    $data = new class () extends Data {
+        public string $name;
 
-    /** @test */
-    public function it_will_make_properties_nullable_if_required()
-    {
-        $data = new class () extends Data {
-            public string $name;
+        public ?int $age;
+    };
 
-            public ?int $age;
-        };
+    $this->assertEqualsCanonicalizing([
+        'name' => ['string', 'nullable'],
+        'age' => ['numeric', 'nullable'],
+    ], $this->resolver->execute($data::class, nullable: true)->all());
+});
 
-        $this->assertEqualsCanonicalizing([
-            'name' => ['string', 'nullable'],
-            'age' => ['numeric', 'nullable'],
-        ], $this->resolver->execute($data::class, nullable: true)->all());
-    }
+it('will merge overwritten rules on the data object', function () {
+    $data = new class () extends Data {
+        public string $name;
 
-    /** @test */
-    public function it_will_merge_overwritten_rules_on_the_data_object()
-    {
-        $data = new class () extends Data {
-            public string $name;
+        public static function rules(): array
+        {
+            return [
+                'name' => ['string', 'required', 'min:10', 'max:100'],
+            ];
+        }
+    };
 
-            public static function rules(): array
-            {
-                return [
-                    'name' => ['string', 'required', 'min:10', 'max:100'],
-                ];
-            }
-        };
+    $this->assertEqualsCanonicalizing([
+        'name' => ['string', 'required', 'min:10', 'max:100'],
+    ], $this->resolver->execute($data::class)->all());
+});
 
-        $this->assertEqualsCanonicalizing([
-            'name' => ['string', 'required', 'min:10', 'max:100'],
-        ], $this->resolver->execute($data::class)->all());
-    }
+it('will merge overwritten rules on nested data objects', function () {
+    $data = new class () extends Data {
+        public SimpleDataWithOverwrittenRules $nested;
 
-    /** @test */
-    public function it_will_merge_overwritten_rules_on_nested_data_objects()
-    {
-        $data = new class () extends Data {
-            public SimpleDataWithOverwrittenRules $nested;
+        /** @var DataCollection<\Spatie\LaravelData\Tests\Fakes\SimpleDataWithOverwrittenRules> */
+        public DataCollection $collection;
+    };
 
-            /** @var DataCollection<\Spatie\LaravelData\Tests\Fakes\SimpleDataWithOverwrittenRules> */
-            public DataCollection $collection;
-        };
+    $this->assertEqualsCanonicalizing([
+        'nested' => ['array', 'required'],
+        'nested.string' => ['string', 'required', 'min:10', 'max:100'],
+        'collection' => ['array', 'present'],
+        'collection.*.string' => ['string', 'required', 'min:10', 'max:100'],
+    ], $this->resolver->execute($data::class)->all());
+});
 
-        $this->assertEqualsCanonicalizing([
-            'nested' => ['array', 'required'],
-            'nested.string' => ['string', 'required', 'min:10', 'max:100'],
-            'collection' => ['array', 'present'],
-            'collection.*.string' => ['string', 'required', 'min:10', 'max:100'],
-        ], $this->resolver->execute($data::class)->all());
-    }
+it('can skip certain properties from being validated', function () {
+    $data = new class () extends Data {
+        #[WithoutValidation]
+        public string $skip_string;
 
-    /** @test */
-    public function it_can_skip_certain_properties_from_being_validated()
-    {
-        $data = new class () extends Data {
-            #[WithoutValidation]
-            public string $skip_string;
+        #[WithoutValidation]
+        public SimpleData $skip_data;
 
-            #[WithoutValidation]
-            public SimpleData $skip_data;
+        #[WithoutValidation]
+        public DataCollection $skip_data_collection;
 
-            #[WithoutValidation]
-            public DataCollection $skip_data_collection;
+        public ?int $age;
+    };
 
-            public ?int $age;
-        };
+    $this->assertEquals([
+        'age' => ['numeric', 'nullable'],
+    ], $this->resolver->execute($data::class)->all());
+});
 
-        $this->assertEquals([
-            'age' => ['numeric', 'nullable'],
-        ], $this->resolver->execute($data::class)->all());
-    }
+it('can resolve dependencies when calling rules', function () {
+    $requestMock = $this->mock(Request::class);
+    $requestMock->expects('input')->andReturns('value');
+    app()->bind(Request::class, fn () => $requestMock);
 
-    /** @test */
-    public function it_can_resolve_dependencies_when_calling_rules()
-    {
-        $requestMock = $this->mock(Request::class);
-        $requestMock->expects('input')->andReturns('value');
-        $this->app->bind(Request::class, fn () => $requestMock);
+    $data = new class () extends Data {
+        public string $name;
 
-        $data = new class () extends Data {
-            public string $name;
+        public static function rules(Request $request): array
+        {
+            return [
+                'name' => $request->input('key') === 'value' ? ['required'] : ['bail'],
+            ];
+        }
+    };
 
-            public static function rules(Request $request): array
-            {
-                return [
-                    'name' => $request->input('key') === 'value' ? ['required'] : ['bail'],
-                ];
-            }
-        };
+    $this->assertEquals([
+        'name' => ['required'],
+    ], $this->resolver->execute($data::class)->all());
+});
 
-        $this->assertEquals([
-            'name' => ['required'],
-        ], $this->resolver->execute($data::class)->all());
-    }
+it('can resolve payload when calling rules', function () {
+    $data = new class () extends Data {
+        public string $name;
 
-    /** @test */
-    public function it_can_resolve_payload_when_calling_rules()
-    {
-        $data = new class () extends Data {
-            public string $name;
+        public static function rules(array $payload): array
+        {
+            return [
+                'name' => $payload['name'] === 'foo' ? ['required'] : ['sometimes'],
+            ];
+        }
+    };
 
-            public static function rules(array $payload): array
-            {
-                return [
-                    'name' => $payload['name'] === 'foo' ? ['required'] : ['sometimes'],
-                ];
-            }
-        };
-
-        $this->assertEquals([
-            'name' => ['required'],
-        ], $this->resolver->execute($data::class, ['name' => 'foo'])->all());
-    }
-}
+    $this->assertEquals([
+        'name' => ['required'],
+    ], $this->resolver->execute($data::class, ['name' => 'foo'])->all());
+});

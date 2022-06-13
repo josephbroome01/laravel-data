@@ -1,7 +1,5 @@
 <?php
 
-namespace Spatie\LaravelData\Tests\Resolvers;
-
 use Illuminate\Validation\Rules\Enum as EnumRule;
 use ReflectionProperty;
 use Spatie\LaravelData\Attributes\Validation\Enum;
@@ -16,225 +14,207 @@ use Spatie\LaravelData\Tests\Fakes\NestedData;
 use Spatie\LaravelData\Tests\Fakes\SimpleData;
 use Spatie\LaravelData\Tests\TestCase;
 
-class DataPropertyValidationRulesResolverTest extends TestCase
+uses(TestCase::class);
+
+it('will add a required or nullable rule based upon the property nullability', function () {
+    $rules = resolveRules(new class () {
+        public int $property;
+    });
+
+    $this->assertEqualsCanonicalizing([
+        'property' => ['required', 'numeric'],
+    ], $rules);
+
+    $rules = resolveRules(new class () {
+        public ?int $property;
+    });
+
+    $this->assertEqualsCanonicalizing([
+        'property' => ['nullable', 'numeric'],
+    ], $rules);
+});
+
+it('will add basic rules for certain types', function () {
+    $rules = resolveRules(new class () {
+        public string $property;
+    });
+
+    $this->assertEqualsCanonicalizing([
+        'property' => ['required', 'string'],
+    ], $rules);
+
+    $rules = resolveRules(new class () {
+        public int $property;
+    });
+
+    $this->assertEqualsCanonicalizing([
+        'property' => ['required', 'numeric'],
+    ], $rules);
+
+    $rules = resolveRules(new class () {
+        public bool $property;
+    });
+
+    $this->assertEqualsCanonicalizing([
+        'property' => ['boolean'],
+    ], $rules);
+
+    $rules = resolveRules(new class () {
+        public float $property;
+    });
+
+    $this->assertEqualsCanonicalizing([
+        'property' => ['required', 'numeric'],
+    ], $rules);
+
+    $rules = resolveRules(new class () {
+        public array $property;
+    });
+
+    $this->assertEqualsCanonicalizing([
+        'property' => ['required', 'array'],
+    ], $rules);
+});
+
+it('will add rules for enums', function () {
+    $this->onlyPHP81();
+
+    $rules = resolveRules(new class () {
+        public FakeEnum $property;
+    });
+
+    $this->assertEqualsCanonicalizing([
+        'property' => ['required', new EnumRule(FakeEnum::class)],
+    ], $rules);
+});
+
+it('will take validation attributes into account', function () {
+    $rules = resolveRules(new class () {
+        #[Max(10)]
+        public string $property;
+    });
+
+    $this->assertEqualsCanonicalizing([
+        'property' => ['required', 'string', 'max:10'],
+    ], $rules);
+});
+
+it('will take rules from nested data objects', function () {
+    $rules = resolveRules(new class () {
+        public SimpleData $property;
+    });
+
+    $this->assertEqualsCanonicalizing([
+        'property' => ['required', 'array'],
+        'property.string' => ['required', 'string'],
+    ], $rules);
+
+    $rules = resolveRules(new class () {
+        public ?SimpleData $property;
+    });
+
+    $this->assertEqualsCanonicalizing([
+        'property' => ['nullable', 'array'],
+        'property.string' => ['nullable', 'string'],
+    ], $rules);
+});
+
+it('will take rules from nested data collections', function () {
+    $rules = resolveRules(new class () {
+        /** @var \Spatie\LaravelData\Tests\Fakes\SimpleData[] */
+        public DataCollection $property;
+    });
+
+    $this->assertEqualsCanonicalizing([
+        'property' => ['present', 'array'],
+        'property.*.string' => ['required', 'string'],
+    ], $rules);
+
+    $rules = resolveRules(new class () {
+        /** @var \Spatie\LaravelData\Tests\Fakes\SimpleData[]|null */
+        public ?DataCollection $property;
+    });
+
+    $this->assertEqualsCanonicalizing([
+        'property' => ['nullable', 'array'],
+        'property.*.string' => ['required', 'string'],
+    ], $rules);
+});
+
+it('can nest validation rules event further', function () {
+    $rules = resolveRules(new class () {
+        public NestedData $property;
+    });
+
+    $this->assertEqualsCanonicalizing([
+        'property' => ['required', 'array'],
+        'property.simple' => ['required', 'array'],
+        'property.simple.string' => ['required', 'string'],
+    ], $rules);
+
+    $rules = resolveRules(new class () {
+        public ?SimpleData $property;
+    });
+
+    $this->assertEqualsCanonicalizing([
+        'property' => ['nullable', 'array'],
+        'property.string' => ['nullable', 'string'],
+    ], $rules);
+});
+
+it('will never add extra require rules when not needed', function () {
+    $rules = resolveRules(new class () {
+        public ?string $property;
+    });
+
+    $this->assertEqualsCanonicalizing([
+        'property' => ['string', 'nullable'],
+    ], $rules);
+
+    $rules = resolveRules(new class () {
+        public bool $property;
+    });
+
+    $this->assertEqualsCanonicalizing([
+        'property' => ['boolean'],
+    ], $rules);
+
+    $rules = resolveRules(new class () {
+        #[RequiredWith('other')]
+        public string $property;
+    });
+
+    $this->assertEqualsCanonicalizing([
+        'property' => ['string', 'required_with:other'],
+    ], $rules);
+
+    $rules = resolveRules(new class () {
+        #[Rule('required_with:other')]
+        public string $property;
+    });
+
+    $this->assertEqualsCanonicalizing([
+        'property' => ['string', 'required_with:other'],
+    ], $rules);
+});
+
+it('will work with non string rules', function () {
+    $rules = resolveRules(new class () {
+        #[Enum(FakeEnum::class)]
+        public string $property;
+    });
+
+    $this->assertEqualsCanonicalizing([
+        'property' => ['string', 'required', new EnumRule(FakeEnum::class)],
+    ], $rules);
+});
+
+// Helpers
+function resolveRules(object $class): array
 {
-    /** @test */
-    public function it_will_add_a_required_or_nullable_rule_based_upon_the_property_nullability()
-    {
-        $rules = $this->resolveRules(new class () {
-            public int $property;
-        });
+    $reflectionProperty = new ReflectionProperty($class, 'property');
 
-        $this->assertEqualsCanonicalizing([
-            'property' => ['required', 'numeric'],
-        ], $rules);
+    $property = DataProperty::create($reflectionProperty);
 
-        $rules = $this->resolveRules(new class () {
-            public ?int $property;
-        });
-
-        $this->assertEqualsCanonicalizing([
-            'property' => ['nullable', 'numeric'],
-        ], $rules);
-    }
-
-    /** @test */
-    public function it_will_add_basic_rules_for_certain_types()
-    {
-        $rules = $this->resolveRules(new class () {
-            public string $property;
-        });
-
-        $this->assertEqualsCanonicalizing([
-            'property' => ['required', 'string'],
-        ], $rules);
-
-        $rules = $this->resolveRules(new class () {
-            public int $property;
-        });
-
-        $this->assertEqualsCanonicalizing([
-            'property' => ['required', 'numeric'],
-        ], $rules);
-
-        $rules = $this->resolveRules(new class () {
-            public bool $property;
-        });
-
-        $this->assertEqualsCanonicalizing([
-            'property' => ['boolean'],
-        ], $rules);
-
-        $rules = $this->resolveRules(new class () {
-            public float $property;
-        });
-
-        $this->assertEqualsCanonicalizing([
-            'property' => ['required', 'numeric'],
-        ], $rules);
-
-        $rules = $this->resolveRules(new class () {
-            public array $property;
-        });
-
-        $this->assertEqualsCanonicalizing([
-            'property' => ['required', 'array'],
-        ], $rules);
-    }
-
-    /** @test */
-    public function it_will_add_rules_for_enums()
-    {
-        $this->onlyPHP81();
-
-        $rules = $this->resolveRules(new class () {
-            public FakeEnum $property;
-        });
-
-        $this->assertEqualsCanonicalizing([
-            'property' => ['required', new EnumRule(FakeEnum::class)],
-        ], $rules);
-    }
-
-    /** @test */
-    public function it_will_take_validation_attributes_into_account()
-    {
-        $rules = $this->resolveRules(new class () {
-            #[Max(10)]
-            public string $property;
-        });
-
-        $this->assertEqualsCanonicalizing([
-            'property' => ['required', 'string', 'max:10'],
-        ], $rules);
-    }
-
-    /** @test */
-    public function it_will_take_rules_from_nested_data_objects()
-    {
-        $rules = $this->resolveRules(new class () {
-            public SimpleData $property;
-        });
-
-        $this->assertEqualsCanonicalizing([
-            'property' => ['required', 'array'],
-            'property.string' => ['required', 'string'],
-        ], $rules);
-
-        $rules = $this->resolveRules(new class () {
-            public ?SimpleData $property;
-        });
-
-        $this->assertEqualsCanonicalizing([
-            'property' => ['nullable', 'array'],
-            'property.string' => ['nullable', 'string'],
-        ], $rules);
-    }
-
-    /** @test */
-    public function it_will_take_rules_from_nested_data_collections()
-    {
-        $rules = $this->resolveRules(new class () {
-            /** @var \Spatie\LaravelData\Tests\Fakes\SimpleData[] */
-            public DataCollection $property;
-        });
-
-        $this->assertEqualsCanonicalizing([
-            'property' => ['present', 'array'],
-            'property.*.string' => ['required', 'string'],
-        ], $rules);
-
-        $rules = $this->resolveRules(new class () {
-            /** @var \Spatie\LaravelData\Tests\Fakes\SimpleData[]|null */
-            public ?DataCollection $property;
-        });
-
-        $this->assertEqualsCanonicalizing([
-            'property' => ['nullable', 'array'],
-            'property.*.string' => ['required', 'string'],
-        ], $rules);
-    }
-
-    /** @test */
-    public function it_can_nest_validation_rules_event_further()
-    {
-        $rules = $this->resolveRules(new class () {
-            public NestedData $property;
-        });
-
-        $this->assertEqualsCanonicalizing([
-            'property' => ['required', 'array'],
-            'property.simple' => ['required', 'array'],
-            'property.simple.string' => ['required', 'string'],
-        ], $rules);
-
-        $rules = $this->resolveRules(new class () {
-            public ?SimpleData $property;
-        });
-
-        $this->assertEqualsCanonicalizing([
-            'property' => ['nullable', 'array'],
-            'property.string' => ['nullable', 'string'],
-        ], $rules);
-    }
-
-    /** @test */
-    public function it_will_never_add_extra_require_rules_when_not_needed()
-    {
-        $rules = $this->resolveRules(new class () {
-            public ?string $property;
-        });
-
-        $this->assertEqualsCanonicalizing([
-            'property' => ['string', 'nullable'],
-        ], $rules);
-
-        $rules = $this->resolveRules(new class () {
-            public bool $property;
-        });
-
-        $this->assertEqualsCanonicalizing([
-            'property' => ['boolean'],
-        ], $rules);
-
-        $rules = $this->resolveRules(new class () {
-            #[RequiredWith('other')]
-            public string $property;
-        });
-
-        $this->assertEqualsCanonicalizing([
-            'property' => ['string', 'required_with:other'],
-        ], $rules);
-
-        $rules = $this->resolveRules(new class () {
-            #[Rule('required_with:other')]
-            public string $property;
-        });
-
-        $this->assertEqualsCanonicalizing([
-            'property' => ['string', 'required_with:other'],
-        ], $rules);
-    }
-
-    /** @test */
-    public function it_will_work_with_non_string_rules()
-    {
-        $rules = $this->resolveRules(new class () {
-            #[Enum(FakeEnum::class)]
-            public string $property;
-        });
-
-        $this->assertEqualsCanonicalizing([
-            'property' => ['string', 'required', new EnumRule(FakeEnum::class)],
-        ], $rules);
-    }
-
-    private function resolveRules(object $class): array
-    {
-        $reflectionProperty = new ReflectionProperty($class, 'property');
-
-        $property = DataProperty::create($reflectionProperty);
-
-        return app(DataPropertyValidationRulesResolver::class)->execute($property)->toArray();
-    }
+    return app(DataPropertyValidationRulesResolver::class)->execute($property)->toArray();
 }

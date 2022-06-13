@@ -1,7 +1,5 @@
 <?php
 
-namespace Spatie\LaravelData\Tests\Casts;
-
 use Exception;
 use ReflectionProperty;
 use Spatie\LaravelData\Casts\EnumCast;
@@ -11,70 +9,56 @@ use Spatie\LaravelData\Tests\Fakes\DummyBackedEnum;
 use Spatie\LaravelData\Tests\Fakes\DummyUnitEnum;
 use Spatie\LaravelData\Tests\TestCase;
 
-class EnumCastTest extends TestCase
-{
-    protected EnumCast $caster;
+uses(TestCase::class);
 
-    public function setUp(): void
-    {
-        parent::setUp();
+beforeEach(function () {
+    $this->onlyPHP81();
 
-        $this->onlyPHP81();
+    $this->caster = new EnumCast();
+});
 
-        $this->caster = new EnumCast();
-    }
+it('can cast enum', function () {
+    $class = new class () {
+        public DummyBackedEnum $enum;
+    };
 
-    /** @test */
-    public function it_can_cast_enum()
-    {
-        $class = new class () {
-            public DummyBackedEnum $enum;
-        };
+    $this->assertEquals(
+        DummyBackedEnum::FOO,
+        $this->caster->cast(DataProperty::create(new ReflectionProperty($class, 'enum')), 'foo')
+    );
+});
 
-        $this->assertEquals(
-            DummyBackedEnum::FOO,
-            $this->caster->cast(DataProperty::create(new ReflectionProperty($class, 'enum')), 'foo')
-        );
-    }
+it('fails when it cannot cast an enum from value', function () {
+    $class = new class () {
+        public DummyBackedEnum $enum;
+    };
 
-    /** @test */
-    public function it_fails_when_it_cannot_cast_an_enum_from_value()
-    {
-        $class = new class () {
-            public DummyBackedEnum $enum;
-        };
+    $this->expectException(Exception::class);
 
-        $this->expectException(Exception::class);
+    $this->assertEquals(
+        DummyBackedEnum::FOO,
+        $this->caster->cast(DataProperty::create(new ReflectionProperty($class, 'enum')), 'bar')
+    );
+});
 
-        $this->assertEquals(
-            DummyBackedEnum::FOO,
-            $this->caster->cast(DataProperty::create(new ReflectionProperty($class, 'enum')), 'bar')
-        );
-    }
+it('fails when casting a unit enum', function () {
+    $class = new class () {
+        public DummyUnitEnum $enum;
+    };
 
-    /** @test */
-    public function it_fails_when_casting_a_unit_enum()
-    {
-        $class = new class () {
-            public DummyUnitEnum $enum;
-        };
+    $this->assertEquals(
+        Uncastable::create(),
+        $this->caster->cast(DataProperty::create(new ReflectionProperty($class, 'enum')), 'foo')
+    );
+});
 
-        $this->assertEquals(
-            Uncastable::create(),
-            $this->caster->cast(DataProperty::create(new ReflectionProperty($class, 'enum')), 'foo')
-        );
-    }
+it('fails with other types', function () {
+    $class = new class () {
+        public int $int;
+    };
 
-    /** @test */
-    public function it_fails_with_other_types()
-    {
-        $class = new class () {
-            public int $int;
-        };
-
-        $this->assertEquals(
-            Uncastable::create(),
-            $this->caster->cast(DataProperty::create(new ReflectionProperty($class, 'int')), 'foo')
-        );
-    }
-}
+    $this->assertEquals(
+        Uncastable::create(),
+        $this->caster->cast(DataProperty::create(new ReflectionProperty($class, 'int')), 'foo')
+    );
+});
