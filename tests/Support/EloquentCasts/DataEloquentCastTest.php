@@ -63,5 +63,5 @@ it('can load null as a value', function () {
     /** @var \Spatie\LaravelData\Tests\Fakes\DummyModelWithCasts $model */
     $model = DummyModelWithCasts::first();
 
-    $this->assertNull($model->data);
+    expect($model->data)->toBeNull();
 });

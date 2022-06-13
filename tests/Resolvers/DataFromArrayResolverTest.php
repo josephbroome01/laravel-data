@@ -50,18 +50,18 @@ it('maps default types', function () {
         ]
     );
 
-    $this->assertInstanceOf(ComplicatedData::class, $data);
-    $this->assertEquals(42, $data->withoutType);
-    $this->assertEquals(42, $data->int);
-    $this->assertTrue($data->bool);
-    $this->assertEquals(3.14, $data->float);
-    $this->assertEquals('Hello world', $data->string);
-    $this->assertEquals([1, 1, 2, 3, 5, 8], $data->array);
-    $this->assertNull($data->nullable);
-    $this->assertEquals(42, $data->mixed);
-    $this->assertEquals(DateTime::createFromFormat(DATE_ATOM, '1994-05-16T12:00:00+01:00'), $data->defaultCast);
-    $this->assertEquals(CarbonImmutable::createFromFormat('d-m-Y', '16-06-1994'), $data->explicitCast);
-    $this->assertEquals(SimpleData::from('hello'), $data->nestedData);
+    expect($data)->toBeInstanceOf(ComplicatedData::class);
+    expect($data->withoutType)->toEqual(42);
+    expect($data->int)->toEqual(42);
+    expect($data->bool)->toBeTrue();
+    expect($data->float)->toEqual(3.14);
+    expect($data->string)->toEqual('Hello world');
+    expect($data->array)->toEqual([1, 1, 2, 3, 5, 8]);
+    expect($data->nullable)->toBeNull();
+    expect($data->mixed)->toEqual(42);
+    expect($data->defaultCast)->toEqual(DateTime::createFromFormat(DATE_ATOM, '1994-05-16T12:00:00+01:00'));
+    expect($data->explicitCast)->toEqual(CarbonImmutable::createFromFormat('d-m-Y', '16-06-1994'));
+    expect($data->nestedData)->toEqual(SimpleData::from('hello'));
     $this->assertEquals(SimpleData::collection([
         SimpleData::from('never'),
         SimpleData::from('gonna'),
@@ -93,18 +93,18 @@ it('wont cast a property that is already in the correct type', function () {
         ]
     );
 
-    $this->assertInstanceOf(ComplicatedData::class, $data);
-    $this->assertEquals(42, $data->withoutType);
-    $this->assertEquals(42, $data->int);
-    $this->assertTrue($data->bool);
-    $this->assertEquals(3.14, $data->float);
-    $this->assertEquals('Hello world', $data->string);
-    $this->assertEquals([1, 1, 2, 3, 5, 8], $data->array);
-    $this->assertNull($data->nullable);
-    $this->assertEquals(42, $data->mixed);
-    $this->assertEquals(DateTime::createFromFormat(DATE_ATOM, '1994-05-16T12:00:00+02:00'), $data->defaultCast);
-    $this->assertEquals(DateTime::createFromFormat('d-m-Y', '16-06-1994'), $data->explicitCast);
-    $this->assertEquals(SimpleData::from('hello'), $data->nestedData);
+    expect($data)->toBeInstanceOf(ComplicatedData::class);
+    expect($data->withoutType)->toEqual(42);
+    expect($data->int)->toEqual(42);
+    expect($data->bool)->toBeTrue();
+    expect($data->float)->toEqual(3.14);
+    expect($data->string)->toEqual('Hello world');
+    expect($data->array)->toEqual([1, 1, 2, 3, 5, 8]);
+    expect($data->nullable)->toBeNull();
+    expect($data->mixed)->toEqual(42);
+    expect($data->defaultCast)->toEqual(DateTime::createFromFormat(DATE_ATOM, '1994-05-16T12:00:00+02:00'));
+    expect($data->explicitCast)->toEqual(DateTime::createFromFormat('d-m-Y', '16-06-1994'));
+    expect($data->nestedData)->toEqual(SimpleData::from('hello'));
     $this->assertEquals(SimpleData::collection([
         SimpleData::from('never'),
         SimpleData::from('gonna'),
@@ -125,8 +125,8 @@ it('will allow a nested data object to handle their own types', function () {
         ]
     );
 
-    $this->assertInstanceOf(NestedModelData::class, $withoutModelData);
-    $this->assertEquals(10, $withoutModelData->model->id);
+    expect($withoutModelData)->toBeInstanceOf(NestedModelData::class);
+    expect($withoutModelData->model->id)->toEqual(10);
 
     /** @var \Spatie\LaravelData\Tests\Fakes\NestedModelData $data */
     $withModelData = $this->action->execute(
@@ -136,8 +136,8 @@ it('will allow a nested data object to handle their own types', function () {
         ]
     );
 
-    $this->assertInstanceOf(NestedModelData::class, $withModelData);
-    $this->assertEquals(10, $withModelData->model->id);
+    expect($withModelData)->toBeInstanceOf(NestedModelData::class);
+    expect($withModelData->model->id)->toEqual(10);
 });
 
 it('will allow a nested collection object to handle its own types', function () {
@@ -149,7 +149,7 @@ it('will allow a nested collection object to handle its own types', function () 
         ]
     );
 
-    $this->assertInstanceOf(NestedModelCollectionData::class, $data);
+    expect($data)->toBeInstanceOf(NestedModelCollectionData::class);
     $this->assertEquals(
         ModelData::collection([['id' => 10], ['id' => 20]]),
         $data->models
@@ -163,7 +163,7 @@ it('will allow a nested collection object to handle its own types', function () 
         ]
     );
 
-    $this->assertInstanceOf(NestedModelCollectionData::class, $data);
+    expect($data)->toBeInstanceOf(NestedModelCollectionData::class);
     $this->assertEquals(
         ModelData::collection([['id' => 10], ['id' => 20]]),
         $data->models
@@ -177,7 +177,7 @@ it('will allow a nested collection object to handle its own types', function () 
         ]
     );
 
-    $this->assertInstanceOf(NestedModelCollectionData::class, $data);
+    expect($data)->toBeInstanceOf(NestedModelCollectionData::class);
     $this->assertEquals(
         ModelData::collection([['id' => 10], ['id' => 20]]),
         $data->models
@@ -191,8 +191,8 @@ it('works nicely with lazy data', function () {
         ['simple' => Lazy::create(fn () => SimpleData::from('Hello'))]
     );
 
-    $this->assertInstanceOf(Lazy::class, $data->simple);
-    $this->assertEquals(Lazy::create(fn () => SimpleData::from('Hello')), $data->simple);
+    expect($data->simple)->toBeInstanceOf(Lazy::class);
+    expect($data->simple)->toEqual(Lazy::create(fn () => SimpleData::from('Hello')));
 });
 
 it('allows casting of built in types', function () {
@@ -202,8 +202,8 @@ it('allows casting of built in types', function () {
         ['money' => 3.14]
     );
 
-    $this->assertIsInt($data->money);
-    $this->assertEquals(314, $data->money);
+    expect($data->money)->toBeInt();
+    expect($data->money)->toEqual(314);
 });
 
 it('allows casting', function () {
@@ -212,8 +212,8 @@ it('allows casting', function () {
         ['date' => '2022-01-18']
     );
 
-    $this->assertInstanceOf(DateTimeImmutable::class, $data->date);
-    $this->assertEquals(DateTimeImmutable::createFromFormat('Y-m-d', '2022-01-18'), $data->date);
+    expect($data->date)->toBeInstanceOf(DateTimeImmutable::class);
+    expect($data->date)->toEqual(DateTimeImmutable::createFromFormat('Y-m-d', '2022-01-18'));
 });
 
 it('allows casting of enums', function () {
@@ -224,6 +224,6 @@ it('allows casting of enums', function () {
         ['enum' => 'foo']
     );
 
-    $this->assertInstanceOf(DummyBackedEnum::class, $data->enum);
-    $this->assertEquals(DummyBackedEnum::FOO, $data->enum);
+    expect($data->enum)->toBeInstanceOf(DummyBackedEnum::class);
+    expect($data->enum)->toEqual(DummyBackedEnum::FOO);
 });

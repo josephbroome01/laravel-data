@@ -33,10 +33,10 @@ it('can create data from a custom method', function () {
         }
     };
 
-    $this->assertEquals(new $data('Hello World'), $data::from('Hello World'));
-    $this->assertEquals(new $data('Rick Astley'), $data::from(DummyDto::rick()));
-    $this->assertEquals(new $data('Hello World'), $data::from(['string' => 'Hello World']));
-    $this->assertEquals(new $data('Hello World'), $data::from(DummyModelWithCasts::make(['string' => 'Hello World'])));
+    expect($data::from('Hello World'))->toEqual(new $data('Hello World'));
+    expect($data::from(DummyDto::rick()))->toEqual(new $data('Rick Astley'));
+    expect($data::from(['string' => 'Hello World']))->toEqual(new $data('Hello World'));
+    expect($data::from(DummyModelWithCasts::make(['string' => 'Hello World'])))->toEqual(new $data('Hello World'));
 });
 
 it('can create data from a custom method with an interface parameter', function () {
@@ -57,7 +57,7 @@ it('can create data from a custom method with an interface parameter', function 
         }
     };
 
-    $this->assertEquals(new $data('Rick Astley'), $data::from($interfaceable));
+    expect($data::from($interfaceable))->toEqual(new $data('Rick Astley'));
 });
 
 it('can create data from a custom method with an inherited parameter', function () {
@@ -72,7 +72,7 @@ it('can create data from a custom method with an inherited parameter', function 
 
     $inherited = new DummyModel(['string' => 'Rick Astley']);
 
-    $this->assertEquals(new $data('Rick Astley'), $data::from($inherited));
+    expect($data::from($inherited))->toEqual(new $data('Rick Astley'));
 });
 
 it('can create data from a custom method and always takes the nearest type', function () {
@@ -91,7 +91,7 @@ it('can create data from a custom method and always takes the nearest type', fun
 
     $inherited = new DummyModel(['string' => 'Rick Astley']);
 
-    $this->assertEquals(new $data('Rick Astley'), $data::from($inherited));
+    expect($data::from($inherited))->toEqual(new $data('Rick Astley'));
 });
 
 it('can create data from a custom optional method', function () {
@@ -113,12 +113,12 @@ it('can create data from a custom optional method', function () {
         }
     };
 
-    $this->assertEquals(new $data('Hello World'), $data::optional('Hello World'));
-    $this->assertEquals(new $data('Rick Astley'), $data::optional(DummyDto::rick()));
-    $this->assertEquals(new $data('Hello World'), $data::optional(['string' => 'Hello World']));
-    $this->assertEquals(new $data('Hello World'), $data::optional(DummyModel::make(['string' => 'Hello World'])));
+    expect($data::optional('Hello World'))->toEqual(new $data('Hello World'));
+    expect($data::optional(DummyDto::rick()))->toEqual(new $data('Rick Astley'));
+    expect($data::optional(['string' => 'Hello World']))->toEqual(new $data('Hello World'));
+    expect($data::optional(DummyModel::make(['string' => 'Hello World'])))->toEqual(new $data('Hello World'));
 
-    $this->assertNull($data::optional(null));
+    expect($data::optional(null))->toBeNull();
 });
 
 it('can resolve validation dependencies for messages', function () {

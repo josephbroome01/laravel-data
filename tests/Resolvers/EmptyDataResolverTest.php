@@ -141,5 +141,5 @@ function assertEmptyPropertyValue(mixed $expected, object $class, array $extra =
 {
     $resolver = app(EmptyDataResolver::class);
 
-    test()->assertEquals($expected, $resolver->execute($class::class, $extra)['property']);
+    expect($resolver->execute($class::class, $extra)['property'])->toEqual($expected);
 }

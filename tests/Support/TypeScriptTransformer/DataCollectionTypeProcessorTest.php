@@ -29,6 +29,6 @@ it('uses the correct types for data collection of attributes', function () {
 
     $reflection = new ReflectionClass($data);
 
-    $this->assertTrue($transformer->canTransform($reflection));
+    expect($transformer->canTransform($reflection))->toBeTrue();
     $this->assertMatchesSnapshot($transformer->transform($reflection, 'DataObject')->transformed);
 });

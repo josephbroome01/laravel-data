@@ -77,27 +77,27 @@ it('can check if a data class has an authorisation method', function () {
     $withoutMethod = new class (null) extends Data {
     };
 
-    $this->assertTrue(DataClass::create(new ReflectionClass($withMethod))->hasAuthorizationMethod());
-    $this->assertFalse(DataClass::create(new ReflectionClass($withNonPublicMethod))->hasAuthorizationMethod());
-    $this->assertFalse(DataClass::create(new ReflectionClass($withNonStaticMethod))->hasAuthorizationMethod());
-    $this->assertFalse(DataClass::create(new ReflectionClass($withoutMethod))->hasAuthorizationMethod());
+    expect(DataClass::create(new ReflectionClass($withMethod))->hasAuthorizationMethod())->toBeTrue();
+    expect(DataClass::create(new ReflectionClass($withNonPublicMethod))->hasAuthorizationMethod())->toBeFalse();
+    expect(DataClass::create(new ReflectionClass($withNonStaticMethod))->hasAuthorizationMethod())->toBeFalse();
+    expect(DataClass::create(new ReflectionClass($withoutMethod))->hasAuthorizationMethod())->toBeFalse();
 });
 
 it('will populate defaults to properties when they exist', function () {
     /** @var \Spatie\LaravelData\Support\DataProperty[] $properties */
     $properties = DataClass::create(new ReflectionClass(DataWithDefaults::class))->properties();
 
-    $this->assertEquals('property', $properties[0]->name());
-    $this->assertFalse($properties[0]->hasDefaultValue());
+    expect($properties[0]->name())->toEqual('property');
+    expect($properties[0]->hasDefaultValue())->toBeFalse();
 
-    $this->assertEquals('default_property', $properties[1]->name());
-    $this->assertTrue($properties[1]->hasDefaultValue());
-    $this->assertEquals('Hello', $properties[1]->defaultValue());
+    expect($properties[1]->name())->toEqual('default_property');
+    expect($properties[1]->hasDefaultValue())->toBeTrue();
+    expect($properties[1]->defaultValue())->toEqual('Hello');
 
-    $this->assertEquals('promoted_property', $properties[2]->name());
-    $this->assertFalse($properties[2]->hasDefaultValue());
+    expect($properties[2]->name())->toEqual('promoted_property');
+    expect($properties[2]->hasDefaultValue())->toBeFalse();
 
-    $this->assertEquals('default_promoted_property', $properties[3]->name());
-    $this->assertTrue($properties[3]->hasDefaultValue());
-    $this->assertEquals('Hello Again', $properties[3]->defaultValue());
+    expect($properties[3]->name())->toEqual('default_promoted_property');
+    expect($properties[3]->hasDefaultValue())->toBeTrue();
+    expect($properties[3]->defaultValue())->toEqual('Hello Again');
 });

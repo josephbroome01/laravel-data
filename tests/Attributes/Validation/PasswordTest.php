@@ -18,7 +18,7 @@ test('password rule returns preconfigured password validations', function (calla
         $prop->setAccessible(true);
         $actual = $prop->getValue($rule);
 
-        $this->assertSame($expected, $actual);
+        expect($actual)->toBe($expected);
     }
 })->with('preconfiguredPasswordValidationsProvider');
 

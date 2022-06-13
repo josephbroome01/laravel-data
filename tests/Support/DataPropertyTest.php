@@ -25,13 +25,13 @@ it('works with non typed properties', function () {
         public $property;
     });
 
-    $this->assertFalse($helper->isLazy());
-    $this->assertTrue($helper->isNullable());
-    $this->assertFalse($helper->isData());
-    $this->assertFalse($helper->isDataCollection());
-    $this->assertTrue($helper->types()->isEmpty());
-    $this->assertEquals('property', $helper->name());
-    $this->assertEquals([], $helper->validationAttributes());
+    expect($helper->isLazy())->toBeFalse();
+    expect($helper->isNullable())->toBeTrue();
+    expect($helper->isData())->toBeFalse();
+    expect($helper->isDataCollection())->toBeFalse();
+    expect($helper->types()->isEmpty())->toBeTrue();
+    expect($helper->name())->toEqual('property');
+    expect($helper->validationAttributes())->toEqual([]);
 });
 
 it('can check if a property is lazy', function () {
@@ -39,19 +39,19 @@ it('can check if a property is lazy', function () {
         public int $property;
     });
 
-    $this->assertFalse($helper->isLazy());
+    expect($helper->isLazy())->toBeFalse();
 
     $helper = resolveHelper(new class () {
         public int|Lazy $property;
     });
 
-    $this->assertTrue($helper->isLazy());
+    expect($helper->isLazy())->toBeTrue();
 
     $helper = resolveHelper(new class () {
         public int|Lazy|null $property;
     });
 
-    $this->assertTrue($helper->isLazy());
+    expect($helper->isLazy())->toBeTrue();
 });
 
 it('can check if a property is nullable', function () {
@@ -59,19 +59,19 @@ it('can check if a property is nullable', function () {
         public int $property;
     });
 
-    $this->assertFalse($helper->isNullable());
+    expect($helper->isNullable())->toBeFalse();
 
     $helper = resolveHelper(new class () {
         public ?int $property;
     });
 
-    $this->assertTrue($helper->isNullable());
+    expect($helper->isNullable())->toBeTrue();
 
     $helper = resolveHelper(new class () {
         public null|int $property;
     });
 
-    $this->assertTrue($helper->isNullable());
+    expect($helper->isNullable())->toBeTrue();
 });
 
 it('can check if a property is a data object', function () {
@@ -79,19 +79,19 @@ it('can check if a property is a data object', function () {
         public int $property;
     });
 
-    $this->assertFalse($helper->isData());
+    expect($helper->isData())->toBeFalse();
 
     $helper = resolveHelper(new class () {
         public SimpleData $property;
     });
 
-    $this->assertTrue($helper->isData());
+    expect($helper->isData())->toBeTrue();
 
     $helper = resolveHelper(new class () {
         public SimpleData|Lazy $property;
     });
 
-    $this->assertTrue($helper->isData());
+    expect($helper->isData())->toBeTrue();
 });
 
 it('can check if a property is a data collection', function () {
@@ -99,19 +99,19 @@ it('can check if a property is a data collection', function () {
         public int $property;
     });
 
-    $this->assertFalse($helper->isDataCollection());
+    expect($helper->isDataCollection())->toBeFalse();
 
     $helper = resolveHelper(new class () {
         public DataCollection $property;
     });
 
-    $this->assertTrue($helper->isDataCollection());
+    expect($helper->isDataCollection())->toBeTrue();
 
     $helper = resolveHelper(new class () {
         public DataCollection|Lazy $property;
     });
 
-    $this->assertTrue($helper->isDataCollection());
+    expect($helper->isDataCollection())->toBeTrue();
 });
 
 it('can get the correct types for the property', function () {
@@ -119,25 +119,25 @@ it('can get the correct types for the property', function () {
         public int $property;
     });
 
-    $this->assertEquals(['int'], $helper->types()->all());
+    expect($helper->types()->all())->toEqual(['int']);
 
     $helper = resolveHelper(new class () {
         public int|float $property;
     });
 
-    $this->assertEquals(['int', 'float'], $helper->types()->all());
+    expect($helper->types()->all())->toEqual(['int', 'float']);
 
     $helper = resolveHelper(new class () {
         public int|Lazy $property;
     });
 
-    $this->assertEquals(['int'], $helper->types()->all());
+    expect($helper->types()->all())->toEqual(['int']);
 
     $helper = resolveHelper(new class () {
         public int|Lazy|null $property;
     });
 
-    $this->assertEquals(['int'], $helper->types()->all());
+    expect($helper->types()->all())->toEqual(['int']);
 });
 
 it('cannot combine a data object and another type', function () {
@@ -162,7 +162,7 @@ it('can get validation attributes', function () {
         public SimpleData $property;
     });
 
-    $this->assertEquals([new Max(10)], $helper->validationAttributes());
+    expect($helper->validationAttributes())->toEqual([new Max(10)]);
 });
 
 it('can get the cast attribute', function () {
@@ -171,7 +171,7 @@ it('can get the cast attribute', function () {
         public SimpleData $property;
     });
 
-    $this->assertEquals(new WithCast(DateTimeInterfaceCast::class), $helper->castAttribute());
+    expect($helper->castAttribute())->toEqual(new WithCast(DateTimeInterfaceCast::class));
 });
 
 it('can get the cast attribute with arguments', function () {
@@ -180,7 +180,7 @@ it('can get the cast attribute with arguments', function () {
         public SimpleData $property;
     });
 
-    $this->assertEquals(new WithCast(DateTimeInterfaceCast::class, 'd-m-y'), $helper->castAttribute());
+    expect($helper->castAttribute())->toEqual(new WithCast(DateTimeInterfaceCast::class, 'd-m-y'));
 });
 
 it('can get the transformer attribute', function () {
@@ -189,7 +189,7 @@ it('can get the transformer attribute', function () {
         public SimpleData $property;
     });
 
-    $this->assertEquals(new WithTransformer(DateTimeInterfaceTransformer::class), $helper->transformerAttribute());
+    expect($helper->transformerAttribute())->toEqual(new WithTransformer(DateTimeInterfaceTransformer::class));
 });
 
 it('can get the transformer attribute with arguments', function () {
@@ -198,7 +198,7 @@ it('can get the transformer attribute with arguments', function () {
         public SimpleData $property;
     });
 
-    $this->assertEquals(new WithTransformer(DateTimeInterfaceTransformer::class, 'd-m-y'), $helper->transformerAttribute());
+    expect($helper->transformerAttribute())->toEqual(new WithTransformer(DateTimeInterfaceTransformer::class, 'd-m-y'));
 });
 
 it('can get the data class for a data object', function () {
@@ -206,7 +206,7 @@ it('can get the data class for a data object', function () {
         public SimpleData $property;
     });
 
-    $this->assertEquals(SimpleData::class, $helper->dataClassName());
+    expect($helper->dataClassName())->toEqual(SimpleData::class);
 });
 
 it('has support for intersection types', function () {
@@ -214,7 +214,7 @@ it('has support for intersection types', function () {
 
     $dataProperty = DataProperty::create(new ReflectionProperty(IntersectionTypeData::class, 'intersection'));
 
-    $this->assertEquals(new DataPropertyTypes([Arrayable::class, Countable::class]), $dataProperty->types());
+    expect($dataProperty->types())->toEqual(new DataPropertyTypes([Arrayable::class, Countable::class]));
 });
 
 it('can check if a property should be validated', function () {
@@ -234,7 +234,7 @@ it('can get the data class for a data collection by annotation', function (
 ) {
     $dataProperty = DataProperty::create(new ReflectionProperty(CollectionAnnotationsData::class, $property));
 
-    $this->assertEquals($expected, $dataProperty->dataClassName());
+    expect($dataProperty->dataClassName())->toEqual($expected);
 })->with('correctAnnotations');
 
 it('cannot get the data class for invalid annotations', function (

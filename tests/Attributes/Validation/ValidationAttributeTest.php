@@ -10,7 +10,7 @@ uses(TestCase::class);
 it('can get a string representation of rules', function () {
     $rule = new Rule('string', 'uuid', 'required');
 
-    $this->assertEquals('string|uuid|required', (string) $rule);
+    expect((string) $rule)->toEqual('string|uuid|required');
 });
 
 it('can normalize values', function (mixed $input, mixed $output) {
@@ -26,7 +26,7 @@ it('can normalize values', function (mixed $input, mixed $output) {
         }
     };
 
-    $this->assertEquals($output, $normalizer->execute($input));
+    expect($normalizer->execute($input))->toEqual($output);
 })->with('values');
 
 // Datasets

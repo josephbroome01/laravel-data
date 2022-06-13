@@ -73,7 +73,7 @@ it('can include a lazy property', function () {
 
     $data = new $dataClass(Lazy::create(fn () => 'test'));
 
-    $this->assertEquals([], $data->toArray());
+    expect($data->toArray())->toEqual([]);
 
     $this->assertEquals([
         'name' => 'test',
@@ -107,7 +107,7 @@ it('can include a nested lazy property', function () {
         Lazy::create(fn () => LazyData::collection(['is', 'it', 'me', 'your', 'looking', 'for',])),
     );
 
-    $this->assertEquals([], (clone $data)->toArray());
+    expect((clone $data)->toArray())->toEqual([]);
 
     $this->assertEquals([
         'data' => [],
@@ -205,11 +205,11 @@ it('can have conditional lazy data', function () {
 
     $data = $blueprint::create('Freek');
 
-    $this->assertEquals([], $data->toArray());
+    expect($data->toArray())->toEqual([]);
 
     $data = $blueprint::create('Ruben');
 
-    $this->assertEquals(['name' => 'Ruben'], $data->toArray());
+    expect($data->toArray())->toEqual(['name' => 'Ruben']);
 });
 
 it('cannot have conditional lazy data manually loaded', function () {
@@ -229,7 +229,7 @@ it('cannot have conditional lazy data manually loaded', function () {
 
     $data = $blueprint::create('Freek');
 
-    $this->assertEmpty($data->include('name')->toArray());
+    expect($data->include('name')->toArray())->toBeEmpty();
 });
 
 it('can include data based upon relations loaded', function () {
@@ -242,7 +242,7 @@ it('can include data based upon relations loaded', function () {
     $transformed = FakeNestedModelData::createWithLazyWhenLoaded($model->load('fakeModel'))->all();
 
     $this->assertArrayHasKey('fake_model', $transformed);
-    $this->assertInstanceOf(FakeModelData::class, $transformed['fake_model']);
+    expect($transformed['fake_model'])->toBeInstanceOf(FakeModelData::class);
 });
 
 it('can include data based upon relations loaded when they are null', function () {
@@ -255,7 +255,7 @@ it('can include data based upon relations loaded when they are null', function (
     $transformed = FakeNestedModelData::createWithLazyWhenLoaded($model->load('fakeModel'))->all();
 
     $this->assertArrayHasKey('fake_model', $transformed);
-    $this->assertNull($transformed['fake_model']);
+    expect($transformed['fake_model'])->toBeNull();
 });
 
 it('can have default included lazy data', function () {
@@ -264,13 +264,13 @@ it('can have default included lazy data', function () {
         }
     };
 
-    $this->assertEquals(['name' => 'Freek'], $data->toArray());
+    expect($data->toArray())->toEqual(['name' => 'Freek']);
 });
 
 it('can exclude default lazy data', function () {
     $data = DefaultLazyData::from('Freek');
 
-    $this->assertEquals([], $data->exclude('name')->toArray());
+    expect($data->exclude('name')->toArray())->toEqual([]);
 });
 
 it('can get the empty version of a data object', function () {
@@ -308,7 +308,7 @@ it('will use transformers to convert specific types', function () {
         }
     };
 
-    $this->assertEquals(['date' => '1994-05-16T00:00:00+00:00'], $data->toArray());
+    expect($data->toArray())->toEqual(['date' => '1994-05-16T00:00:00+00:00']);
 });
 
 it('can manually specify a transformer', function () {
@@ -322,7 +322,7 @@ it('can manually specify a transformer', function () {
         }
     };
 
-    $this->assertEquals(['date' => '16-05-1994'], $data->toArray());
+    expect($data->toArray())->toEqual(['date' => '16-05-1994']);
 });
 
 test('a transformer will never handle a null value', function () {
@@ -334,7 +334,7 @@ test('a transformer will never handle a null value', function () {
         }
     };
 
-    $this->assertEquals(['date' => null], $data->toArray());
+    expect($data->toArray())->toEqual(['date' => null]);
 });
 
 it('can dynamically include data based upon the request', function () {
@@ -344,9 +344,9 @@ it('can dynamically include data based upon the request', function () {
         'include' => 'name',
     ]));
 
-    $this->assertEquals([], $response->getData(true));
+    expect($response->getData(true))->toEqual([]);
 
-    $this->assertEquals(['name' => 'Ruben'], $includedResponse->getData(true));
+    expect($includedResponse->getData(true))->toEqual(['name' => 'Ruben']);
 });
 
 it('can disable including data dynamically from the request', function () {
@@ -356,7 +356,7 @@ it('can disable including data dynamically from the request', function () {
         'include' => 'name',
     ]));
 
-    $this->assertEquals([], $response->getData(true));
+    expect($response->getData(true))->toEqual([]);
 
     LazyData::$allowedIncludes = ['name'];
 
@@ -364,7 +364,7 @@ it('can disable including data dynamically from the request', function () {
         'include' => 'name',
     ]));
 
-    $this->assertEquals(['name' => 'Ruben'], $response->getData(true));
+    expect($response->getData(true))->toEqual(['name' => 'Ruben']);
 
     LazyData::$allowedIncludes = null;
 
@@ -372,7 +372,7 @@ it('can disable including data dynamically from the request', function () {
         'include' => 'name',
     ]));
 
-    $this->assertEquals(['name' => 'Ruben'], $response->getData(true));
+    expect($response->getData(true))->toEqual(['name' => 'Ruben']);
 });
 
 it('can dynamically exclude data based upon the request', function () {
@@ -382,9 +382,9 @@ it('can dynamically exclude data based upon the request', function () {
         'exclude' => 'name',
     ]));
 
-    $this->assertEquals(['name' => 'Ruben'], $response->getData(true));
+    expect($response->getData(true))->toEqual(['name' => 'Ruben']);
 
-    $this->assertEquals([], $excludedResponse->getData(true));
+    expect($excludedResponse->getData(true))->toEqual([]);
 });
 
 it('can disable excluding data dynamically from the request', function () {
@@ -394,7 +394,7 @@ it('can disable excluding data dynamically from the request', function () {
         'exclude' => 'name',
     ]));
 
-    $this->assertEquals(['name' => 'Ruben'], $response->getData(true));
+    expect($response->getData(true))->toEqual(['name' => 'Ruben']);
 
     DefaultLazyData::$allowedExcludes = ['name'];
 
@@ -402,7 +402,7 @@ it('can disable excluding data dynamically from the request', function () {
         'exclude' => 'name',
     ]));
 
-    $this->assertEquals([], $response->getData(true));
+    expect($response->getData(true))->toEqual([]);
 
     DefaultLazyData::$allowedExcludes = null;
 
@@ -410,7 +410,7 @@ it('can disable excluding data dynamically from the request', function () {
         'exclude' => 'name',
     ]));
 
-    $this->assertEquals([], $response->getData(true));
+    expect($response->getData(true))->toEqual([]);
 });
 
 it('can get the data object without transforming', function () {
@@ -482,7 +482,7 @@ it('can optionally create data', function () {
         ->withProperty(DataPropertyBlueprintFactory::new('string')->withType('string'))
         ->create();
 
-    $this->assertNull($dataClass::optional(null));
+    expect($dataClass::optional(null))->toBeNull();
     $this->assertEquals(
         new $dataClass('Hello world'),
         $dataClass::optional(['string' => 'Hello world'])
@@ -514,7 +514,7 @@ it('can validate if an array fits a data object and returns the data object', fu
 
     $data = $dataClass::validate(['string' => 'Hello World']);
 
-    $this->assertEquals('Hello World', $data->string);
+    expect($data->string)->toEqual('Hello World');
 });
 
 it('can create a data model without constructor', function () {
@@ -561,10 +561,10 @@ it('can create a data object from a model', function () {
 
     $data = $dataClass::from(DummyModel::findOrFail($model->id));
 
-    $this->assertEquals('test', $data->string);
-    $this->assertTrue($data->boolean);
-    $this->assertTrue(CarbonImmutable::create(2020, 05, 16, 12, 00, 00)->eq($data->date));
-    $this->assertNull($data->nullable_date);
+    expect($data->string)->toEqual('test');
+    expect($data->boolean)->toBeTrue();
+    expect(CarbonImmutable::create(2020, 05, 16, 12, 00, 00)->eq($data->date))->toBeTrue();
+    expect($data->nullable_date)->toBeNull();
 });
 
 it('can create a data object from a std class object', function () {
@@ -587,10 +587,10 @@ it('can create a data object from a std class object', function () {
 
     $data = $dataClass::from($object);
 
-    $this->assertEquals('test', $data->string);
-    $this->assertTrue($data->boolean);
-    $this->assertTrue(CarbonImmutable::create(2020, 05, 16, 12, 00, 00)->eq($data->date));
-    $this->assertNull($data->nullable_date);
+    expect($data->string)->toEqual('test');
+    expect($data->boolean)->toBeTrue();
+    expect(CarbonImmutable::create(2020, 05, 16, 12, 00, 00)->eq($data->date))->toBeTrue();
+    expect($data->nullable_date)->toBeNull();
 });
 
 it('can add the with data trait to a request', function () {
@@ -606,7 +606,7 @@ it('can add the with data trait to a request', function () {
 
     $data = $formRequest->getData();
 
-    $this->assertEquals(SimpleData::from('Hello World'), $data);
+    expect($data)->toEqual(SimpleData::from('Hello World'));
 });
 
 it('can add the with data trait to a model', function () {
@@ -622,7 +622,7 @@ it('can add the with data trait to a model', function () {
 
     $data = $model->getData();
 
-    $this->assertEquals(SimpleData::from('Hello World'), $data);
+    expect($data)->toEqual(SimpleData::from('Hello World'));
 });
 
 it('can define the with data trait data class by method', function () {
@@ -643,7 +643,7 @@ it('can define the with data trait data class by method', function () {
 
     $data = $arrayable->getData();
 
-    $this->assertEquals(SimpleData::from('Hello World'), $data);
+    expect($data)->toEqual(SimpleData::from('Hello World'));
 });
 
 it('always validates requests when passed to the from method', function () {
@@ -667,8 +667,8 @@ it('has support for readonly properties', function () {
 
     $data = ReadonlyData::from(['string' => 'Hello world']);
 
-    $this->assertInstanceOf(ReadonlyData::class, $data);
-    $this->assertEquals('Hello world', $data->string);
+    expect($data)->toBeInstanceOf(ReadonlyData::class);
+    expect($data->string)->toEqual('Hello world');
 });
 
 it('has support for intersection types', function () {
@@ -678,13 +678,13 @@ it('has support for intersection types', function () {
 
     $data = IntersectionTypeData::from(['intersection' => $collection]);
 
-    $this->assertInstanceOf(IntersectionTypeData::class, $data);
-    $this->assertEquals($collection, $data->intersection);
+    expect($data)->toBeInstanceOf(IntersectionTypeData::class);
+    expect($data->intersection)->toEqual($collection);
 });
 
 it('can transform to json', function () {
-    $this->assertEquals('{"string":"Hello"}', SimpleData::from('Hello')->toJson());
-    $this->assertEquals('{"string":"Hello"}', json_encode(SimpleData::from('Hello')));
+    expect(SimpleData::from('Hello')->toJson())->toEqual('{"string":"Hello"}');
+    expect(json_encode(SimpleData::from('Hello')))->toEqual('{"string":"Hello"}');
 });
 
 it('can construct a data object with both constructor promoted and default properties', function () {
@@ -702,8 +702,8 @@ it('can construct a data object with both constructor promoted and default prope
         'promoted_property' => 'B',
     ]);
 
-    $this->assertEquals('A', $data->property);
-    $this->assertEquals('B', $data->promoted_property);
+    expect($data->property)->toEqual('A');
+    expect($data->promoted_property)->toEqual('B');
 });
 
 it('can construct a data object with default values', function () {
@@ -712,10 +712,10 @@ it('can construct a data object with default values', function () {
         'promoted_property' => 'Test Again',
     ]);
 
-    $this->assertEquals('Test', $data->property);
-    $this->assertEquals('Test Again', $data->promoted_property);
-    $this->assertEquals('Hello', $data->default_property);
-    $this->assertEquals('Hello Again', $data->default_promoted_property);
+    expect($data->property)->toEqual('Test');
+    expect($data->promoted_property)->toEqual('Test Again');
+    expect($data->default_property)->toEqual('Hello');
+    expect($data->default_promoted_property)->toEqual('Hello Again');
 });
 
 it('can construct a data object with default values and overwrite them', function () {
@@ -726,10 +726,10 @@ it('can construct a data object with default values and overwrite them', functio
         'default_promoted_property' => 'Test Again',
     ]);
 
-    $this->assertEquals('Test', $data->property);
-    $this->assertEquals('Test Again', $data->promoted_property);
-    $this->assertEquals('Test', $data->default_property);
-    $this->assertEquals('Test Again', $data->default_promoted_property);
+    expect($data->property)->toEqual('Test');
+    expect($data->promoted_property)->toEqual('Test Again');
+    expect($data->default_property)->toEqual('Test');
+    expect($data->default_promoted_property)->toEqual('Test Again');
 });
 
 it('can use a custom transformer to transform data objects and collections', function () {
@@ -827,11 +827,11 @@ it('can cast data objects and collections using a custom cast', function () {
         'nestedDataCollection' => ['another secret', 'yet another secret'],
     ]);
 
-    $this->assertEquals(SimpleData::from('a secret'), $dataWithDefaultCasts->nestedData);
-    $this->assertEquals(SimpleData::collection(['another secret', 'yet another secret']), $dataWithDefaultCasts->nestedDataCollection);
+    expect($dataWithDefaultCasts->nestedData)->toEqual(SimpleData::from('a secret'));
+    expect($dataWithDefaultCasts->nestedDataCollection)->toEqual(SimpleData::collection(['another secret', 'yet another secret']));
 
-    $this->assertEquals(SimpleData::from('CONFIDENTIAL'), $dataWithCustomCasts->nestedData);
-    $this->assertEquals(SimpleData::collection(['CONFIDENTIAL', 'CONFIDENTIAL']), $dataWithCustomCasts->nestedDataCollection);
+    expect($dataWithCustomCasts->nestedData)->toEqual(SimpleData::from('CONFIDENTIAL'));
+    expect($dataWithCustomCasts->nestedDataCollection)->toEqual(SimpleData::collection(['CONFIDENTIAL', 'CONFIDENTIAL']));
 });
 
 it('can cast built in types with custom casts', function () {
@@ -849,8 +849,8 @@ it('can cast built in types with custom casts', function () {
         'with_cast' => 'Hello World',
     ]);
 
-    $this->assertEquals('Hello World', $data->without_cast);
-    $this->assertEquals('HELLO WORLD', $data->with_cast);
+    expect($data->without_cast)->toEqual('Hello World');
+    expect($data->with_cast)->toEqual('HELLO WORLD');
 });
 
 it('continues value assignment after a false boolean', function () {
@@ -871,8 +871,8 @@ it('continues value assignment after a false boolean', function () {
         'date' => Carbon::create(2020, 05, 16, 12, 00, 00),
     ]);
 
-    $this->assertFalse($data->false);
-    $this->assertTrue($data->true);
-    $this->assertEquals('string', $data->string);
-    $this->assertTrue(Carbon::create(2020, 05, 16, 12, 00, 00)->equalTo($data->date));
+    expect($data->false)->toBeFalse();
+    expect($data->true)->toBeTrue();
+    expect($data->string)->toEqual('string');
+    expect(Carbon::create(2020, 05, 16, 12, 00, 00)->equalTo($data->date))->toBeTrue();
 });

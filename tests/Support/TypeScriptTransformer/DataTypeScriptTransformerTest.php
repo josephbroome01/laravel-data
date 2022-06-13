@@ -39,6 +39,6 @@ it('can covert a data object to typescript', function () {
 
     $reflection = new ReflectionClass($data);
 
-    $this->assertTrue($transformer->canTransform($reflection));
+    expect($transformer->canTransform($reflection))->toBeTrue();
     $this->assertMatchesSnapshot($transformer->transform($reflection, 'DataObject')->transformed);
 });

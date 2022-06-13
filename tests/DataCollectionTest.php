@@ -34,7 +34,7 @@ test('a collection can be constructed with data objects', function () {
         'B',
     ]);
 
-    $this->assertEquals($collectionB->toArray(), $collectionA->toArray());
+    expect($collectionA->toArray())->toEqual($collectionB->toArray());
 });
 
 test('a collection can be filtered', function () {
@@ -95,24 +95,24 @@ it('is iteratable', function () {
         $letters[] = $item->string;
     }
 
-    $this->assertEquals(['A', 'B', 'C', 'D'], $letters);
+    expect($letters)->toEqual(['A', 'B', 'C', 'D']);
 });
 
 it('has array access', function (Closure $collection) {
     $collection = $collection();
 
     // Count
-    $this->assertEquals(4, count($collection));
+    expect(count($collection))->toEqual(4);
 
     // Offset exists
-    $this->assertFalse(empty($collection[3]));
+    expect(empty($collection[3]))->toBeFalse();
 
-    $this->assertTrue(empty($collection[5]));
+    expect(empty($collection[5]))->toBeTrue();
 
     // Offset get
-    $this->assertEquals(SimpleData::from('A'), $collection[0]);
+    expect($collection[0])->toEqual(SimpleData::from('A'));
 
-    $this->assertEquals(SimpleData::from('D'), $collection[3]);
+    expect($collection[3])->toEqual(SimpleData::from('D'));
 
     if ($collection->items() instanceof AbstractPaginator || $collection->items() instanceof CursorPaginator) {
         return;
@@ -122,13 +122,13 @@ it('has array access', function (Closure $collection) {
     $collection[2] = 'And now something completely different';
     $collection[4] = 'E';
 
-    $this->assertEquals(SimpleData::from('And now something completely different'), $collection[2]);
-    $this->assertEquals(SimpleData::from('E'), $collection[4]);
+    expect($collection[2])->toEqual(SimpleData::from('And now something completely different'));
+    expect($collection[4])->toEqual(SimpleData::from('E'));
 
     // Offset unset
     unset($collection[4]);
 
-    $this->assertCount(4, $collection);
+    expect($collection)->toHaveCount(4);
 })->with('arrayAccessCollections');
 
 it('can dynamically include data based upon the request', function () {
@@ -326,8 +326,8 @@ it('can convert a data collection into a laravel collection', function () {
 test('a collection can be transformed to json', function () {
     $collection = SimpleData::collection(['A', 'B', 'C']);
 
-    $this->assertEquals('[{"string":"A"},{"string":"B"},{"string":"C"}]', $collection->toJson());
-    $this->assertEquals('[{"string":"A"},{"string":"B"},{"string":"C"}]', json_encode($collection));
+    expect($collection->toJson())->toEqual('[{"string":"A"},{"string":"B"},{"string":"C"}]');
+    expect(json_encode($collection))->toEqual('[{"string":"A"},{"string":"B"},{"string":"C"}]');
 });
 
 it('can reset the keys', function () {

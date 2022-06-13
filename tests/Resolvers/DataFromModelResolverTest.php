@@ -22,9 +22,9 @@ it('can get a data object from model', function () {
 
     $data = FakeModelData::from($model);
 
-    $this->assertEquals($model->string, $data->string);
-    $this->assertEquals($model->nullable, $data->nullable);
-    $this->assertEquals($model->date, $data->date);
+    expect($data->string)->toEqual($model->string);
+    expect($data->nullable)->toEqual($model->nullable);
+    expect($data->date)->toEqual($model->date);
 });
 
 it('can get a data object with nesting from model and relations', function () {
@@ -35,19 +35,19 @@ it('can get a data object with nesting from model and relations', function () {
 
     $data = FakeModelData::from($model->load('fakeNestedModels'));
 
-    $this->assertEquals($model->string, $data->string);
-    $this->assertEquals($model->nullable, $data->nullable);
-    $this->assertEquals($model->date, $data->date);
+    expect($data->string)->toEqual($model->string);
+    expect($data->nullable)->toEqual($model->nullable);
+    expect($data->date)->toEqual($model->date);
 
-    $this->assertCount(2, $data->fake_nested_models);
+    expect($data->fake_nested_models)->toHaveCount(2);
 
-    $this->assertEquals($nestedModelA->string, $data->fake_nested_models[0]->string);
-    $this->assertEquals($nestedModelA->nullable, $data->fake_nested_models[0]->nullable);
-    $this->assertEquals($nestedModelA->date, $data->fake_nested_models[0]->date);
+    expect($data->fake_nested_models[0]->string)->toEqual($nestedModelA->string);
+    expect($data->fake_nested_models[0]->nullable)->toEqual($nestedModelA->nullable);
+    expect($data->fake_nested_models[0]->date)->toEqual($nestedModelA->date);
 
-    $this->assertEquals($nestedModelB->string, $data->fake_nested_models[1]->string);
-    $this->assertEquals($nestedModelB->nullable, $data->fake_nested_models[1]->nullable);
-    $this->assertEquals($nestedModelB->date, $data->fake_nested_models[1]->date);
+    expect($data->fake_nested_models[1]->string)->toEqual($nestedModelB->string);
+    expect($data->fake_nested_models[1]->nullable)->toEqual($nestedModelB->nullable);
+    expect($data->fake_nested_models[1]->date)->toEqual($nestedModelB->date);
 });
 
 it('can get a data object from model with dates', function () {
@@ -82,10 +82,10 @@ it('can get a data object from model with dates', function () {
 
     $data = $this->resolver->execute($dataClass, $model);
 
-    $this->assertTrue($data->date->eq(Carbon::create(2020, 05, 16, 00, 00, 00)));
-    $this->assertTrue($data->datetime->eq(Carbon::create(2020, 05, 16, 12, 00, 00)));
-    $this->assertTrue($data->immutable_date->eq(Carbon::create(2020, 05, 16, 00, 00, 00)));
-    $this->assertTrue($data->immutable_datetime->eq(Carbon::create(2020, 05, 16, 12, 00, 00)));
-    $this->assertTrue($data->created_at->eq(Carbon::create(2020, 05, 16, 12, 00, 00)));
-    $this->assertTrue($data->updated_at->eq(Carbon::create(2020, 05, 16, 12, 00, 00)));
+    expect($data->date->eq(Carbon::create(2020, 05, 16, 00, 00, 00)))->toBeTrue();
+    expect($data->datetime->eq(Carbon::create(2020, 05, 16, 12, 00, 00)))->toBeTrue();
+    expect($data->immutable_date->eq(Carbon::create(2020, 05, 16, 00, 00, 00)))->toBeTrue();
+    expect($data->immutable_datetime->eq(Carbon::create(2020, 05, 16, 12, 00, 00)))->toBeTrue();
+    expect($data->created_at->eq(Carbon::create(2020, 05, 16, 12, 00, 00)))->toBeTrue();
+    expect($data->updated_at->eq(Carbon::create(2020, 05, 16, 12, 00, 00)))->toBeTrue();
 });

@@ -24,7 +24,7 @@ it('wont add a required rule when a property is non nullable', function () {
 
     $rules = $this->inferrer->handle($dataProperty, []);
 
-    $this->assertEqualsCanonicalizing(['required'], $rules);
+    expect($rules)->toEqualCanonicalizing(['required']);
 });
 
 it('wont add a required rule when a property is nullable', function () {
@@ -34,7 +34,7 @@ it('wont add a required rule when a property is nullable', function () {
 
     $rules = $this->inferrer->handle($dataProperty, []);
 
-    $this->assertEqualsCanonicalizing([], $rules);
+    expect($rules)->toEqualCanonicalizing([]);
 });
 
 it('wont add a required rule when a property already contains a required rule', function () {
@@ -44,7 +44,7 @@ it('wont add a required rule when a property already contains a required rule', 
 
     $rules = $this->inferrer->handle($dataProperty, ['required_if:bla']);
 
-    $this->assertEqualsCanonicalizing(['required_if:bla'], $rules);
+    expect($rules)->toEqualCanonicalizing(['required_if:bla']);
 });
 
 it('wont add a required rule when a property already contains a required object rule', function () {
@@ -54,7 +54,7 @@ it('wont add a required rule when a property already contains a required object 
 
     $rules = $this->inferrer->handle($dataProperty, [Rule::requiredIf(true)]);
 
-    $this->assertEqualsCanonicalizing([Rule::requiredIf(true)], $rules);
+    expect($rules)->toEqualCanonicalizing([Rule::requiredIf(true)]);
 });
 
 it('wont add a required rule when a property already contains a boolean rule', function () {
@@ -64,7 +64,7 @@ it('wont add a required rule when a property already contains a boolean rule', f
 
     $rules = $this->inferrer->handle($dataProperty, ['boolean']);
 
-    $this->assertEqualsCanonicalizing(['boolean'], $rules);
+    expect($rules)->toEqualCanonicalizing(['boolean']);
 });
 
 it('wont add a required rule when a property already contains a nullable rule', function () {
@@ -74,7 +74,7 @@ it('wont add a required rule when a property already contains a nullable rule', 
 
     $rules = $this->inferrer->handle($dataProperty, ['nullable']);
 
-    $this->assertEqualsCanonicalizing(['nullable'], $rules);
+    expect($rules)->toEqualCanonicalizing(['nullable']);
 });
 
 it('has support for rules that cannot be converted to string', function () {
@@ -84,7 +84,7 @@ it('has support for rules that cannot be converted to string', function () {
 
     $rules = $this->inferrer->handle($dataProperty, [new Enum('SomeClass')]);
 
-    $this->assertEqualsCanonicalizing(['required', new Enum('SomeClass')], $rules);
+    expect($rules)->toEqualCanonicalizing(['required', new Enum('SomeClass')]);
 });
 
 it('wont add required to a data collection since it is already present', function () {
@@ -95,7 +95,7 @@ it('wont add required to a data collection since it is already present', functio
 
     $rules = $this->inferrer->handle($dataProperty, ['present', 'array']);
 
-    $this->assertEqualsCanonicalizing(['present', 'array'], $rules);
+    expect($rules)->toEqualCanonicalizing(['present', 'array']);
 });
 
 // Helpers
